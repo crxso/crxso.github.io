@@ -6,7 +6,7 @@ image: balrog.jpg
 math: 
 license: 
 hidden: false
-comments: true
+comments: false
 draft: false
 tags:
     - AI
@@ -14,8 +14,6 @@ categories:
     - AI
     - RAG
 ---
-
-# Approach to Retrieval-Augmented Generation (RAG)
 
 | Version | Updated on | Updated by |
 | :--- | :--- | :--- |

@@ -6,7 +6,7 @@ image: ollama.png
 math: 
 license: 
 hidden: false
-comments: true
+comments: false
 draft: false
 tags:
     - AI
@@ -15,18 +15,14 @@ categories:
     - AI
     - Ollama
 ---
-# Local AI Setup: Ollama + LocalGPT
 
 | Version | Updated on | Updated by |
 | :--- | :--- | :--- |
 | v1.0.0 | 10/01/2025 | @crxso |
 
+## Install Ollama and Dependencies
 
 This guide will walk you through installing **Ollama** to run large language models (LLMs) locally and then setting up and running **localGPT**, a system for local RAG (Retrieval-Augmented Generation).
-
----
-
-## Install Ollama and Dependencies
 
 ###  Environment Setup
 
