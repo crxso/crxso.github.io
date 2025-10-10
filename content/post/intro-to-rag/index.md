@@ -9,7 +9,7 @@ hidden: false
 comments: false
 draft: false
 tags:
-    - AI
+    - Informational
 categories:
     - AI
     - RAG

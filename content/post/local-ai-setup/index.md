@@ -9,8 +9,7 @@ hidden: false
 comments: false
 draft: false
 tags:
-    - AI
-    - Ollama
+    - Tutorial
 categories:
     - AI
     - Ollama
