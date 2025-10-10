@@ -14,10 +14,10 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
     /* --- LIGHT MODE (Your Base) --- */
     --body-background: #f5f5fa;
 
-    --accent-color: #34495e;
-    --accent-color-darker: #2c3e50;
+    --accent-color: #ce0000;
+    --accent-color-darker: #509fed;
     --accent-color-text: #fff;
-    --body-text-color: #707070;
+    --body-text-color: #000000;
 
     --tag-border-radius: 4px;
 
@@ -41,12 +41,13 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
         --scrollbar-track: var(--body-background);
 
         /* --- FIX 1: TARGET NON-ARTICLE TEXT & GENERIC ELEMENTS --- */
-        body, aside, nav, footer, .article-footer {
+        body, aside, footer, .article-footer {
             color: var(--body-text-color);
         }
         
-        /* Ensure basic text elements inherit the body color */
-        h1, h2, h3, h4, h5, h6, strong, b, p, li, div, span, label {
+        /* >>> CRITICAL FIX APPLIED HERE: REMOVED div/span/a <<< */
+        /* ONLY target block-level elements, allowing inline link text to inherit accent color */
+        h1, h2, h3, h4, h5, h6, strong, b, p, li, label {
             color: var(--body-text-color);
         }
 
@@ -82,7 +83,7 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
 
     --card-text-color-main: #000;
     --card-text-color-secondary: #747474;
-    --card-text-color-tertiary: #767676;
+    --card-text-color-tertiary: #000000;
     --card-separator-color: rgba(218, 218, 218, 0.5);
 
     --card-border-radius: 10px;
@@ -109,7 +110,7 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
         --card-background-selected: #21262D; 
         --card-text-color-main: #C9D1D9; /* Light text */
         --card-text-color-secondary: #8B949E;
-        --card-text-color-tertiary: #6E7681;
+        --card-text-color-tertiary: #ffffff;
         --card-separator-color: #30363D;
     }
 }
@@ -193,4 +194,21 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
     --menu-icon-separation: 40px;
     --container-padding: 15px;
     --widget-separation: var(--section-separation);
+}
+
+/* --- PREVIOUS AGGRESSIVE FIXES KEPT FOR SPECIFICITY --- */
+/* This targets the menu link (a) AND any span/div text directly inside it, 
+   forcing the accent color to be used over any generic text color. */
+[data-scheme="dark"] nav a,
+[data-scheme="dark"] .sidebar-nav a { 
+    /* Set the color for the anchor element itself */
+    color: var(--accent-color) !important;
+}
+
+[data-scheme="dark"] nav a span,
+[data-scheme="dark"] nav a div,
+[data-scheme="dark"] .sidebar-nav a span,
+[data-scheme="dark"] .sidebar-nav a div { 
+    /* Use !important to bypass all existing color overrides */
+    color: var(--accent-color) !important;
 }
