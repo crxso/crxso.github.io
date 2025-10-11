@@ -2,7 +2,7 @@
 title: "Approach to Retrieval-Augmented Generation (RAG)"
 description:  Vector Databases and Nomic Embed
 date: 2025-10-03T21:41:29-07:00
-lastmod: '2020-10-03'
+lastmod: '2025-10-03'
 image: balrog.jpg
 math: 
 license: 
