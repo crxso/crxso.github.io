@@ -2,19 +2,20 @@
     display: flex; 
     justify-content: space-between; 
     align-items: center; 
-    font-size: 1em; /* Optional: Adjust size to look better */
+    font-size: 1em;
+    /* Remove base margins */
     margin-top: 0px; 
     margin-bottom: 0px;
 ">
     
-    <div style="display: flex; align-items: center;">
+    <div id="live-time-date-wrapper" style="display: flex; align-items: center;">
         <svg style="width: 1.2em; height: 1.2em; fill: currentColor; margin-right: 5px;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM5 7V6h14v1H5z"/>
         </svg>
         <time id="live-time-date"></time>
     </div>
     
-    <div style="display: flex; align-items: center;">
+    <div id="live-time-time-wrapper" style="display: flex; align-items: center;">
         <svg style="width: 1.2em; height: 1.2em; fill: currentColor; margin-right: 5px;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm.5 16H11V7h1.5v4.75L15.93 14.8l-.94 1.48L12.5 13.5V18z"/>
         </svg>
@@ -23,18 +24,56 @@
 </div>
 
 <script>
+    const mobileBreakpoint = 768;
+
+    const container = document.getElementById('live-time-display-container');
+    const dateWrapper = document.getElementById('live-time-date-wrapper');
+    const timeWrapper = document.getElementById('live-time-time-wrapper');
+
+    function applyResponsiveStyles() {
+        if (!container || !dateWrapper || !timeWrapper) return;
+        
+        const isMobile = window.innerWidth <= mobileBreakpoint;
+        
+        // --- MOBILE ALIGNMENT ---
+        if (isMobile) {
+            container.style.cssText = `
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center; 
+                font-size: 0.9em; 
+                /* Mobile pull-up of INNER content (Confirmed to work for mobile consistency) */
+                margin-top: -25px !important; 
+                margin-bottom: 5px !important;
+                flex-direction: row; 
+            `;
+            dateWrapper.style.cssText = 'display: flex; align-items: center; margin-right: 15px; margin-bottom: 0;';
+            timeWrapper.style.cssText = 'display: flex; align-items: center; margin-left: 0; margin-bottom: 0;';
+            
+        } else {
+            // DESKTOP STYLES: Keep the inner container neutral.
+            container.style.cssText = `
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center; 
+                font-size: 0.9em; 
+                margin-top: 0px; 
+                margin-bottom: 0px;
+                flex-direction: row;
+            `;
+            dateWrapper.style.cssText = 'display: flex; align-items: center; margin-right: 15px; margin-bottom: 0;';
+            timeWrapper.style.cssText = 'display: flex; align-items: center; margin-left: 0; margin-bottom: 0;'; 
+        }
+    }
+
     function updateLiveTime() {
         const timeElementDate = document.getElementById('live-time-date');
         const timeElementTime = document.getElementById('live-time-time');
         if (!timeElementDate || !timeElementTime) return;
 
         const now = new Date();
-
-        // Part 1: Date (Sat Oct 11 2025)
         const dateOptions = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
         const datePart = now.toLocaleDateString('en-US', dateOptions).replace(/,/g, '');
-
-        // Part 2: Time (1:29:27 AM PDT)
         const timeOptions = {
             hour: 'numeric',
             minute: '2-digit',
@@ -51,7 +90,12 @@
         timeElementTime.textContent = `${timeString} ${tzAbbr}`;
     }
     
+    // Initial calls
     updateLiveTime();
+    applyResponsiveStyles(); 
+
+    // Event listeners
     setInterval(updateLiveTime, 1000);
+    window.addEventListener('resize', applyResponsiveStyles);
 
 </script>

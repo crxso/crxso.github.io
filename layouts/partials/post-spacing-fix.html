@@ -1,0 +1,26 @@
+<style>
+/* ------------------------------------------------ */
+/* DESKTOP SINGLE POST FIX (Gap below date/time)    */
+/* ------------------------------------------------ */
+@media (min-width: 769px) {
+    /* Adjust this value (-80px) until the gap between date/time and image/title is correct.
+       This overrides the theme's default large top padding on the article content block.
+    */
+    .single-post-live-time-wrapper.article-meta {
+        margin-bottom: -80px !important; 
+    }
+}
+
+/* ------------------------------------------------ */
+/* MOBILE SINGLE POST FIX (Gap below date/time)     */
+/* ------------------------------------------------ */
+@media (max-width: 768px) {
+    /* Apply a negative bottom margin to the date/time wrapper.
+       This should pull the image (which sits just below it) up to close the gap.
+       We are using -35px to start.
+    */
+    .single-post-live-time-wrapper.article-meta {
+        margin-bottom: -80px !important; 
+    }
+}
+</style>
