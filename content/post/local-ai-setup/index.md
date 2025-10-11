@@ -2,6 +2,7 @@
 title: "Local AI Setup"
 description: Ollama + LocalGPT
 date: 2025-10-01T20:42:52-07:00
+lastmod: '2020-10-01'
 image: ollama.png
 math: 
 license: 

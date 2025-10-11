@@ -16,3 +16,6 @@ hasCJKLanguage = false
 
 [pagination]
 pagerSize = 5
+
+[security]
+  enableInlineShortcodes = true

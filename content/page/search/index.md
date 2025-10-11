@@ -1,5 +1,6 @@
 ---
 title: "Search"
+date: 2025-09-01
 slug: "search"
 layout: "search"
 outputs:
@@ -7,7 +8,7 @@ outputs:
     - json
 menu:
     main:
-        weight: 3
+        weight: 4
         params: 
             icon: search
 ---
