@@ -1,0 +1,62 @@
+{{ define "main" }}
+    
+    {{/* The header block is removed entirely to eliminate "SECTION 3 PAGES" */}}
+
+    {{/* ------------------------------------------------------------- */}}
+    {{/* CUSTOM CONTENT INJECTION: This renders content/_index.md */}}
+    {{/* The style here helps reduce top spacing */}}
+    {{ with .Content }}
+    <section class="article-list custom-homepage-content" style="padding-top: 0; padding-bottom: 0;">
+        {{ . }}
+    </section>
+    {{ end }}
+    {{/* ------------------------------------------------------------- */}}
+    
+    {{- $subsections := .Sections -}}
+    {{- $pages := .Pages | complement $subsections -}}
+    
+    {{- if eq (len $pages) 0 -}}
+        {{- $pages = $subsections -}}
+        {{- $subsections = slice -}}
+    {{- end -}}
+
+    {{- with $subsections -}}
+        <aside>
+            <h2 class="section-title">{{ T "list.subsection" (len $subsections) }}</h2>
+            <div class="subsection-list">
+                <div class="article-list--tile">
+                    {{ range . }}
+                        {{ partial "article-list/tile" (dict "context" . "size" "250x150" "Type" "section") }}
+                    {{ end }}
+                </div>
+            </div>
+        </aside>
+    {{- end -}}
+    
+    {{/* List the blog posts using the full card style (article-list/default) */}}
+    {{ $paginator := .Paginate $pages }}
+    
+    <section class="article-list"> 
+        {{ range $paginator.Pages }}
+            {{ partial "article-list/default" . }}
+        {{ end }}
+    </section>
+
+    {{- partial "pagination.html" . -}}
+
+    {{/* ------------------------------------------------------------- */}}
+    {{/* FINAL GRAPH INJECTION: Insert the graph before the footer partial */}}
+    {{/* ------------------------------------------------------------- */}}
+    <div style="text-align: center; margin: 30px auto 10px; padding-top: -100px; max-width: 800px; border-top: 1px solid var(--border-color, #ccc);">
+        <a href="https://github.com/crxso" target="_blank" title="View my GitHub Profile">
+          <img src="https://ghchart.rshah.org/crxso" alt="crxso's GitHub Contributions" 
+               style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(254, 0, 0, 0.1);">
+        </a>
+    </div>
+    
+    {{ partialCached "footer/footer" . }}
+{{ end }}
+
+{{ define "right-sidebar" }}
+    {{ partial "sidebar/right.html" (dict "Context" . "Scope" "homepage") }}
+{{ end }}

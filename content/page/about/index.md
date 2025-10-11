@@ -15,10 +15,3 @@ menu:
         params: 
             icon: user
 ---
-
-Today is
-{{< date.inline ":date_full" >}}
-  {{- now | time.Format (.Get 0) -}}
-{{< /date.inline >}}.
-
-![GitHub Contributions](https://ghchart.rshah.org/crxso)
