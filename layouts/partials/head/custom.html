@@ -1,6 +1,7 @@
 <style>
 /* -------------------------------------------------------------------------------------- */
 /* 1. FIXED DATE/TIME HEADER STYLES (Applies to ALL pages)                                */
+/* Default is Mobile: Full-width bar */
 /* -------------------------------------------------------------------------------------- */
 .fixed-datetime-header {
     /* Core Fixed Positioning */
@@ -8,17 +9,17 @@
     top: 0px !important; 
     z-index: 1000 !important; 
     
-    /* Appearance - USING THEME VARIABLES */
+    /* Appearance - USING THEME VARIABLES (Your current values preserved) */
     background-color: var(--header-background) !important; 
-    border-bottom: 0px solid var(--header-border-color) !important; /* Border REMOVED */
-    color: var(--header-text-color) !important; /* Controls the date/time text and SVG icons */
-    border-radius: 0 0 8px 8px; 
+    border-bottom: 1px solid var(--header-border-color) !important; 
+    color: var(--header-text-color) !important; 
+    border-radius: 0 0 4px 4px; 
     
     /* Dimensions and Padding */
     height: 33px; 
     box-sizing: border-box; 
     
-    /* Default width - starts full screen/width */
+    /* MOBILE DEFAULT: Pinned left/right, full width */
     left: 0 !important;
     right: 0 !important;
     width: 100% !important; 
@@ -27,13 +28,12 @@
     /* Display/Alignment */
     display: flex !important;
     align-items: center !important;
-    
-    /* KEY CHANGE: Centers the inner content (date/time container) horizontally */
     justify-content: center !important; 
 }
 
 /* -------------------------------------------------------------------------------------- */
 /* 2. CORE CONTENT CLEARANCE FIXES (Keeps content pushed down)                            */
+/* (NO CHANGES HERE) */
 /* -------------------------------------------------------------------------------------- */
 
 /* A. Fix for ALL Individual Post Pages (.article-page) */
@@ -58,29 +58,48 @@ body:not(.article-page) .custom-homepage-content {
 
 
 /* -------------------------------------------------------------------------------------- */
-/* 3. DESKTOP WIDTTH ALIGNMENT (Screen width > 1024px) - FULL WIDTH, CENTERED CONTENT  */
+/* 3. DESKTOP WIDTTH ALIGNMENT (Screen width > 1024px) - FLOATING BUBBLE CENTERING      */
 /* -------------------------------------------------------------------------------------- */
 @media (min-width: 1025px) {
     
     .fixed-datetime-header {
-        /* Pinned to edges, full width, but content remains centered via justify-content */
-        left: 0 !important; 
-        right: 0 !important;
-        width: 100% !important; 
-        padding: 10px 20px 10px 20px !important; 
+        /* KEY CHANGE 1: WIDTH AUTO - Header only wraps the content inside */
+        width: auto !important; 
+        
+        /* KEY CHANGE 2: Horizontal Centering with transform/left */
+        left: 50% !important; 
+        transform: translateX(-50%);
+        right: auto !important; /* Ensure 'right' doesn't conflict */
+        
+        /* Appearance: Make it look like a floating element */
+        border-radius: 0 0 4px 4px; 
+        border-bottom: 1px solid var(--header-border-color) !important; /* Remove bottom border for a clean bubble */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for floating effect */
+        
+        /* Adjust padding for a tighter fit */
+        padding: 8px 25px 8px 25px !important; 
     }
 }
 
 
 /* -------------------------------------------------------------------------------------- */
-/* 4. MEDIUM/TABLET WIDTTH ALIGNMENT (900px to 1024px) - FULL WIDTH, CENTERED CONTENT   */
+/* 4. MEDIUM/TABLET WIDTTH ALIGNMENT (900px to 1024px) - ALSO FLOATING BUBBLE           */
+/* I'm applying the same floating style here as it seems appropriate for all non-mobile views. */
 /* -------------------------------------------------------------------------------------- */
 @media (min-width: 900px) and (max-width: 1024px) {
-    /* Header spans full browser width (no 320px offset) to ensure content is centered globally */
+    
     .fixed-datetime-header {
-        left: 0 !important; 
-        width: 100% !important; 
-        padding: 10px 40px !important; 
+        /* KEY CHANGE: Implement floating bubble logic */
+        width: auto !important; 
+        left: 50% !important; 
+        transform: translateX(-50%);
+        right: auto !important;
+        
+        border-radius: 0 0 4px 4px; 
+        border-bottom: 1px solid var(--header-border-color) !important;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        
+        padding: 8px 25px 8px 25px !important; 
     }
     
     /* Ensure content clearance */
@@ -91,12 +110,19 @@ body:not(.article-page) .custom-homepage-content {
 }
 
 /* -------------------------------------------------------------------------------------- */
-/* 5. MOBILE ALIGNMENT (< 900px)                                                          */
+/* 5. MOBILE ALIGNMENT (< 900px) - Restores default full-width bar                       */
 /* -------------------------------------------------------------------------------------- */
 @media (max-width: 899px) {
     .fixed-datetime-header {
+        /* Reset positioning for full width */
         left: 0 !important;
+        right: 0 !important;
         width: 100% !important;
+        
+        /* Restore bottom border and full width look */
+        border-bottom: 1px solid var(--header-border-color) !important; 
+        box-shadow: none; 
+        
         padding: 10px 15px !important; 
     }
 }
@@ -104,16 +130,14 @@ body:not(.article-page) .custom-homepage-content {
 
 <div class="fixed-datetime-header"> 
     <div id="live-time-display-container" style="
-        /* The width: auto, margin: auto, and default flex centering properties on the parent 
-           will ensure this entire container sits in the middle of the browser. */
         display: flex; 
-        justify-content: center; /* Centers the date and time blocks relative to each other */
+        justify-content: center; 
         align-items: center; 
-        font-size: 1em;
-        width: auto; /* Allows the container to shrink to fit the content */
+        font-size: 1.1em;
+        width: auto; 
     ">
         
-        <div id="live-time-date-wrapper" style="display: flex; align-items: center; margin-right: 50px;">
+        <div id="live-time-date-wrapper" style="display: flex; align-items: center; margin-right: 40px;">
             <svg style="width: 1.2em; height: 1.2em; fill: currentColor; margin-right: 5px;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM5 7V6h14v1H5z"/>
             </svg>
