@@ -1,8 +1,5 @@
 {{ define "main" }}
     
-    {{/* The header block is removed entirely to eliminate "SECTION 3 PAGES" */}}
-
-    {{/* ------------------------------------------------------------- */}}
     {{/* CUSTOM CONTENT INJECTION: This renders content/_index.md */}}
     {{/* The style here helps reduce top spacing */}}
     {{ with .Content }}
@@ -10,9 +7,10 @@
         {{ . }}
     </section>
     {{ end }}
-    {{/* ------------------------------------------------------------- */}}
     
-    {{ partial "date-time-aligner.html" . }}
+    {{/* The date/time header is included via the site's <head> partial 
+        and does NOT need to be called here. */}}
+    
     {{- $subsections := .Sections -}}
     {{- $pages := .Pages | complement $subsections -}}
     
@@ -37,7 +35,7 @@
     {{/* List the blog posts using the full card style (article-list/default) */}}
     {{ $paginator := .Paginate $pages }}
     
-    <section class="article-list" style="margin-top: -20px;">
+    <section class="article-list" style="margin-top: 0px;">
         {{ range $paginator.Pages }}
             {{ partial "article-list/default" . }}
         {{ end }}
@@ -46,15 +44,15 @@
     {{- partial "pagination.html" . -}}
 
     {{/* ------------------------------------------------------------- */}}
-    {{/* FINAL GRAPH INJECTION: Insert the graph before the footer partial */}}
+    {{/* GITHUB GRAPH INJECTION */}}
     {{/* ------------------------------------------------------------- */}}
     
     <div id="github-graph-scroll-wrapper" style="
-        overflow-x: auto; /* Keeps horizontal scrolling ENABLED for small screens */
+        overflow-x: auto; 
         -webkit-overflow-scrolling: touch;
-        margin: 10px auto -30px; /* Vertical spacing adjustment to pull it closer */
+        margin: 40px auto 40px; 
         padding-top: 20px; 
-        max-width: 100%; /* Ensure it spans the full content width */
+        max-width: 100%;
         border-top: 1px solid var(--border-color, #ccc);
         padding-left: 10px;
         padding-right: 10px;
@@ -69,7 +67,6 @@
                         border-radius: 0px; 
                         box-shadow: 0 4px 12px rgba(254, 0, 0, 0.1);
                         margin-bottom: 20px; 
-
                         transform: scale(1.02);
                         transform-origin: center;
                    ">
@@ -81,8 +78,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const wrapper = document.getElementById('github-graph-scroll-wrapper');
             if (wrapper) {
-                // Scroll to the far right (maximum scroll position)
-                // Use a short delay to ensure image dimensions are calculated before scrolling
+                // Scrolls to the far right, which is standard for GitHub graphs
                 setTimeout(() => {
                     wrapper.scrollRight = wrapper.scrollWidth;
                 }, 100); 

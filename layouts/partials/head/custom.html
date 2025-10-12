@@ -1,0 +1,155 @@
+<style>
+/* -------------------------------------------------------------------------------------- */
+/* 1. FIXED DATE/TIME HEADER STYLES (Applies to ALL pages)                                */
+/* -------------------------------------------------------------------------------------- */
+.fixed-datetime-header {
+    /* Core Fixed Positioning */
+    position: fixed !important;
+    top: 0px !important; 
+    z-index: 1000 !important; 
+    
+    /* Appearance - USING THEME VARIABLES */
+    background-color: var(--header-background) !important; 
+    border-bottom: 0px solid var(--header-border-color) !important; /* Border REMOVED */
+    color: var(--header-text-color) !important; /* Controls the date/time text and SVG icons */
+    border-radius: 0 0 8px 8px; 
+    
+    /* Dimensions and Padding */
+    height: 33px; 
+    box-sizing: border-box; 
+    
+    /* Default width - starts full screen/width */
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important; 
+    padding: 10px 15px !important; 
+    
+    /* Display/Alignment */
+    display: flex !important;
+    align-items: center !important;
+    
+    /* KEY CHANGE: Centers the inner content (date/time container) horizontally */
+    justify-content: center !important; 
+}
+
+/* -------------------------------------------------------------------------------------- */
+/* 2. CORE CONTENT CLEARANCE FIXES (Keeps content pushed down)                            */
+/* -------------------------------------------------------------------------------------- */
+
+/* A. Fix for ALL Individual Post Pages (.article-page) */
+.article-page #main {
+    padding-top: 55px !important; 
+    margin-top: 0 !important;
+}
+
+/* B. Fix for All List Pages (Homepage, Category/Tag lists) */
+body:not(.article-page) #main {
+    padding-top: 0px !important; 
+    margin-top: 0px !important;
+}
+
+/* C. CLEARANCE FOR HOMEPAGE'S FIRST SECTION (.custom-homepage-content) */
+body:not(.article-page) .custom-homepage-content {
+    margin-top: -80px !important; 
+    padding-top: 125px !important; 
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important; 
+}
+
+
+/* -------------------------------------------------------------------------------------- */
+/* 3. DESKTOP WIDTTH ALIGNMENT (Screen width > 1024px) - FULL WIDTH, CENTERED CONTENT  */
+/* -------------------------------------------------------------------------------------- */
+@media (min-width: 1025px) {
+    
+    .fixed-datetime-header {
+        /* Pinned to edges, full width, but content remains centered via justify-content */
+        left: 0 !important; 
+        right: 0 !important;
+        width: 100% !important; 
+        padding: 10px 20px 10px 20px !important; 
+    }
+}
+
+
+/* -------------------------------------------------------------------------------------- */
+/* 4. MEDIUM/TABLET WIDTTH ALIGNMENT (900px to 1024px) - FULL WIDTH, CENTERED CONTENT   */
+/* -------------------------------------------------------------------------------------- */
+@media (min-width: 900px) and (max-width: 1024px) {
+    /* Header spans full browser width (no 320px offset) to ensure content is centered globally */
+    .fixed-datetime-header {
+        left: 0 !important; 
+        width: 100% !important; 
+        padding: 10px 40px !important; 
+    }
+    
+    /* Ensure content clearance */
+    #main {
+        padding-top: 55px !important; 
+        margin-top: 0px !important; 
+    }
+}
+
+/* -------------------------------------------------------------------------------------- */
+/* 5. MOBILE ALIGNMENT (< 900px)                                                          */
+/* -------------------------------------------------------------------------------------- */
+@media (max-width: 899px) {
+    .fixed-datetime-header {
+        left: 0 !important;
+        width: 100% !important;
+        padding: 10px 15px !important; 
+    }
+}
+</style>
+
+<div class="fixed-datetime-header"> 
+    <div id="live-time-display-container" style="
+        /* The width: auto, margin: auto, and default flex centering properties on the parent 
+           will ensure this entire container sits in the middle of the browser. */
+        display: flex; 
+        justify-content: center; /* Centers the date and time blocks relative to each other */
+        align-items: center; 
+        font-size: 1em;
+        width: auto; /* Allows the container to shrink to fit the content */
+    ">
+        
+        <div id="live-time-date-wrapper" style="display: flex; align-items: center; margin-right: 50px;">
+            <svg style="width: 1.2em; height: 1.2em; fill: currentColor; margin-right: 5px;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM5 7V6h14v1H5z"/>
+            </svg>
+            <time id="live-time-date"></time>
+        </div>
+        
+        <div id="live-time-time-wrapper" style="display: flex; align-items: center;">
+            <svg style="width: 1.2em; height: 1.2em; fill: currentColor; margin-right: 5px;" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm.5 16H11V7h1.5v4.75L15.93 14.8l-.94 1.48L12.5 13.5V18z"/>
+            </svg>
+            <time id="live-time-time"></time>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateLiveTime() {
+        const fixedHeader = document.querySelector('.fixed-datetime-header');
+        if (!fixedHeader) return;
+        
+        const timeElementDate = fixedHeader.querySelector('#live-time-date');
+        const timeElementTime = fixedHeader.querySelector('#live-time-time');
+        if (!timeElementDate || !timeElementTime) return;
+
+        const now = new Date();
+        const dateOptions = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+        const datePart = now.toLocaleDateString('en-US', dateOptions).replace(/,/g, '');
+        const timeOptions = { hour: 'numeric', minute: '2-digit', second: '2-digit', hour12: true, timeZoneName: 'short' };
+        const timeParts = now.toLocaleTimeString('en-US', timeOptions).split(' ');
+        const timeString = timeParts.slice(0, 2).join(' '); 
+        const tzAbbr = timeParts.length > 2 ? timeParts.pop() : '';
+
+        timeElementDate.textContent = datePart;
+        timeElementTime.textContent = `${timeString} ${tzAbbr}`;
+    }
+    
+    updateLiveTime(); 
+    setInterval(updateLiveTime, 1000);
+</script>
