@@ -19,7 +19,7 @@ lastUpdated = "Mon Jan 02, 2006"
 [sidebar.avatar]
 enabled = true
 local = true
-src = "img/avatar_2.png"
+src = "img/desk.png"
 
 [article]
 headingAnchor = false

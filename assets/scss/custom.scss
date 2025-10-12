@@ -56,14 +56,14 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
         --header-text-color: #ffffff;
         --header-border-color: #30363D;
 
-        --accent-color: #00978d;      /* Main highlight color (e.g., sidebar active, hover) - BLUE */
+        --accent-color: #00a973;      /* Main highlight color (e.g., sidebar active, hover) - BLUE */
         --accent-color-darker: #b9b9b9;
         --accent-color-text: #000306;
         
         --body-text-color: #e5ecf1;   /* GitHub Light Text Color */
         
         /* FIX: Setting the TOC/Heading Border color back to your desired dark mode blue */
-        --toc-accent-color: #00978d;  
+        --toc-accent-color: #00a973;  
 
         --scrollbar-thumb: #30363D;
         --scrollbar-track: var(--body-background);

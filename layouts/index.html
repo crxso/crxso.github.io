@@ -53,13 +53,14 @@
         margin: 40px auto 40px; 
         padding-top: 20px; 
         max-width: 100%;
-        border-top: 1px solid var(--border-color, #ccc);
+        border-top: 1px solid var(--card-separator-color, #30363D); /* Use a dynamic color variable for the border */
         padding-left: 10px;
         padding-right: 10px;
     ">
         <div style="text-align: center; width: max-content; margin: 0 auto;">
             <a href="https://github.com/crxso" target="_blank" title="View my GitHub Profile">
-              <img src="https://ghchart.rshah.org/crxso"
+              <img id="github-contributions-graph" 
+                   src=""
                    alt="crxso's GitHub Contributions" 
                    style="
                         max-width: 100%; 
@@ -77,10 +78,43 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const wrapper = document.getElementById('github-graph-scroll-wrapper');
+            const graphImg = document.getElementById('github-contributions-graph');
+            const root = document.querySelector(':root');
+
+            // 1. Theme-Switching Logic
+            const darkSrc = 'https://ghchart.rshah.org/0c8b00/crxso';
+            const lightSrc = 'https://ghchart.rshah.org/ce0000/crxso';
+
+            function updateGraphSrc() {
+                // Check the data-scheme attribute on the root element
+                const isDark = root.getAttribute('data-scheme') === 'dark';
+                graphImg.src = isDark ? darkSrc : lightSrc;
+            }
+
+            // Initial load
+            if (graphImg && root) {
+                updateGraphSrc();
+            }
+
+            // Observe changes to the data-scheme attribute to handle mode switching
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'data-scheme') {
+                        updateGraphSrc();
+                    }
+                });
+            });
+
+            if (root) {
+                observer.observe(root, { attributes: true });
+            }
+
+            // 2. Scrolling Logic (retained)
             if (wrapper) {
                 // Scrolls to the far right, which is standard for GitHub graphs
                 setTimeout(() => {
-                    wrapper.scrollRight = wrapper.scrollWidth;
+                    // Use scrollLeft to scroll the content inside the wrapper
+                    wrapper.scrollLeft = wrapper.scrollWidth;
                 }, 100); 
             }
         });
