@@ -15,8 +15,8 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
     --body-background: #f5f5fa;
 
     /* ADDED HEADER VARIABLES FOR LIGHT MODE */
-    --header-background: #ce0000; 
-    --header-text-color: #f5f5fa;
+    --header-background: #f5f5fa; 
+    --header-text-color: #ce0000;
     --header-border-color: #30363D;
 
     --accent-color: #ce0000;
@@ -206,19 +206,25 @@ $defaultTagColors: #fff, #fff, #fff, #fff, #fff;
     --widget-separation: var(--section-separation);
 }
 
-/* --- PREVIOUS AGGRESSIVE FIXES KEPT FOR SPECIFICITY --- */
-/* This targets the menu link (a) AND any span/div text directly inside it, 
-   forcing the accent color to be used over any generic text color. */
-[data-scheme="dark"] nav a,
-[data-scheme="dark"] .sidebar-nav a { 
-    /* Set the color for the anchor element itself */
+/* -------------------------------------------------------------------------------------- */
+/* NEW FIX: ISOLATE @crxso AND SET NAVIGATION TO BODY COLOR                               */
+/* This replaces the previous aggressive fixes that colored everything with the accent color. */
+/* -------------------------------------------------------------------------------------- */
+
+/* 1. Target the sidebar profile link (@crxso) to ALWAYS use the accent color */
+.sidebar-profile a {
     color: var(--accent-color) !important;
 }
 
-[data-scheme="dark"] nav a span,
-[data-scheme="dark"] nav a div,
-[data-scheme="dark"] .sidebar-nav a span,
-[data-scheme="dark"] .sidebar-nav a div { 
-    /* Use !important to bypass all existing color overrides */
-    color: var(--accent-color) !important;
+/* 2. Target the main navigation links (Home, About, Archives, Search, Links) 
+   and force them to use the generic body text color in both modes. */
+.sidebar-nav a,
+.sidebar-nav a span,
+.sidebar-nav a div { 
+    color: var(--body-text-color) !important;
+}
+
+/* 3. Ensure the Dark Mode toggle (if it's a link) is also body color */
+.dark-mode-switch a {
+    color: var(--body-text-color) !important;
 }

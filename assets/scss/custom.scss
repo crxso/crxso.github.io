@@ -1,0 +1,281 @@
+$defaultTagBackgrounds: #e02424, #004d77, #f08b1f, #6b69d6;
+$defaultTagColors: #fff, #fff, #fff, #fff, #fff;
+
+/*
+* Global style
+*/
+:root {
+    /* ... (Light mode variables remain mostly unchanged) ... */
+    --main-top-padding: 35px;
+
+    @include respond(xl) {
+        --main-top-padding: 50px;
+    }
+
+    /* Dedicated accent color for TOC borders and Article Headings */
+    --toc-accent-color: #ce0000; /* Light Mode: Primary Red */
+
+    /* --- LIGHT MODE (Your Base) --- */
+    --body-background: #f5f5fa;
+
+    /* ADDED HEADER VARIABLES FOR LIGHT MODE */
+    --header-background: #f5f5fa; 
+    --header-text-color: #000000;
+    --header-border-color: #30363D;
+
+    --accent-color: #ce0000; /* Primary accent color (Red) */
+    --accent-color-darker: #f5f5fa;
+    --accent-color-text: #ffffff;
+    --body-text-color: #000000;
+
+    --tag-border-radius: 4px;
+
+    --section-separation: 40px;
+
+    --scrollbar-thumb: hsl(0, 0%, 85%);
+    --scrollbar-track: var(--body-background);
+    
+    /* --- GLOBAL LINK FIX (LIGHT MODE) --- */
+    a, a:visited {
+        color: var(--body-text-color); 
+    }
+    a:hover, a:active {
+        color: var(--accent-color);
+    }
+
+
+    &[data-scheme="dark"] {
+        /* ************************************************* */
+        /* *** DARK MODE: GITHUB STYLE (DEEP BLUE/GREEN) *** */
+        /* ************************************************* */
+        
+        --body-background: #0D1117; /* GitHub Dark Mode Background (Deep Blue/Black) */
+        
+        /* ADDED HEADER VARIABLES FOR DARK MODE */
+        --header-background: #161B22;
+        --header-text-color: #ffffff;
+        --header-border-color: #30363D;
+
+        --accent-color: #00978d;      /* Main highlight color (e.g., sidebar active, hover) - BLUE */
+        --accent-color-darker: #b9b9b9;
+        --accent-color-text: #000306;
+        
+        --body-text-color: #e5ecf1;   /* GitHub Light Text Color */
+        
+        /* FIX: Setting the TOC/Heading Border color back to your desired dark mode blue */
+        --toc-accent-color: #00978d;  
+
+        --scrollbar-thumb: #30363D;
+        --scrollbar-track: var(--body-background);
+
+        /* --- FIX 1: TARGET NON-ARTICLE TEXT & GENERIC ELEMENTS --- */
+        body, aside, footer, .article-footer {
+            color: var(--body-text-color);
+        }
+        
+        /* This rule was too aggressive and affected card text. We're keeping it concise. */
+        h1, h2, h3, h4, h5, h6, strong, b, p, li, label {
+            color: var(--body-text-color);
+        }
+        
+        /* >>> GLOBAL LINK FIX (DARK MODE) - REVERTED TO BE LESS AGGRESSIVE <<< */
+        /* Ensure standard links use body text color, and only hover/active use the accent color */
+        a, a:visited {
+            color: var(--body-text-color); 
+        }
+        a:hover, a:active {
+            color: var(--accent-color);
+        }
+
+        /* --- FIX 2: TARGET CODE BLOCKS FOR BASE BACKGROUND --- */
+        pre, .chroma {
+            background-color: var(--pre-background-color) !important;
+        }
+
+        /* This fixes the Disqus text that should be light gray */
+        .footer-content, .comments-section {
+            color: var(--body-text-color) !important;
+        }
+    }
+}
+
+/**
+* Global font family
+*/
+:root {
+    --sys-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Droid Sans", "Helvetica Neue";
+    --zh-font-family: "PingFang SC", "Hiragino Sans GB", "Droid Sans Fallback", "Microsoft YaHei";
+
+    --base-font-family: "Lato", var(--sys-font-family), var(--zh-font-family), sans-serif;
+    --code-font-family: Menlo, Monaco, Consolas, "Courier New", var(--zh-font-family), monospace;
+}
+
+/*
+* Card style
+*/
+:root {
+    --card-background: #fff;
+    --card-background-selected: #eaeaea;
+
+    --card-text-color-main: #000;
+    --card-text-color-secondary: #747474;
+    --card-text-color-tertiary: #000000;
+    --card-separator-color: rgba(218, 218, 218, 0.5);
+
+    --card-border-radius: 10px;
+
+    --card-padding: 20px;
+
+    @include respond(md) {
+        --card-padding: 25px;
+    }
+
+    @include respond(xl) {
+        --card-padding: 30px;
+    }
+
+    --small-card-padding: 25px 20px;
+
+    @include respond(md) {
+        --small-card-padding: 25px;
+    }
+
+    &[data-scheme="dark"] {
+        /* *** DARK MODE: GITHUB CARD OVERRIDES *** */
+        --card-background: #161B22; 
+        --card-background-selected: #21262D; 
+        --card-text-color-main: #fff; /* RESTORED WHITE TEXT FOR CARDS/TOC */
+        --card-text-color-secondary: #8B949E;
+        --card-text-color-tertiary: #ffffff;
+        --card-separator-color: #30363D;
+    }
+}
+
+/**
+* Article content font settings
+*/
+:root {
+    --article-font-family: var(--base-font-family);
+    --article-font-size: 1.6rem;
+
+    @include respond(md) {
+        --article-font-size: 1.7rem;
+    }
+
+    --article-line-height: 1.85;
+}
+
+/*
+* Article content style
+*/
+:root {
+    --blockquote-border-size: 4px;
+    --blockquote-background-color: rgb(248 248 248);
+
+    --heading-border-size: 4px;
+
+    --link-background-color: 189, 195, 199;
+    --link-background-opacity: 0.5;
+    --link-background-opacity-hover: 0.7;
+
+    --pre-background-color: #272822; /* Default highlight background (Monokai) */
+    --pre-text-color: #f8f8f2;
+
+    --code-background-color: rgba(0, 0, 0, 0.12);
+    --code-text-color: #808080;
+
+    --table-border-color: #dadada;
+    --tr-even-background-color: #efefee;
+
+    --kbd-border-color: #dadada;
+
+    &[data-scheme="dark"] {
+        /* *** DARK MODE: GITHUB ARTICLE OVERRIDES *** */
+        --code-background-color: #30363D;
+        --code-text-color: #C9D1D9; /* Light text for in-line code */
+        
+        --table-border-color: #30363D;
+        --tr-even-background-color: #161B22;
+
+        /* >>> FIX APPLIED HERE <<< */
+        --blockquote-background-color: #21262D; /* Lighter than card background (#161B22) for contrast */
+    }
+}
+
+/*
+* Shadow style
+*/
+:root {
+    --shadow-l1: 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 2px rgba(0, 0, 0, 0.06), 0px 0px 1px rgba(0, 0, 0, 0.04);
+    --shadow-l2: 0px 10px 20px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
+    --shadow-l3: 0px 10px 20px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
+    --shadow-l4: 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04),
+        0px 0px 1px rgba(0, 0, 0, 0.04);
+}
+
+[data-scheme="light"] {
+    --pre-text-color: #272822;
+    --pre-background-color: #fafafa;
+    @import "partials/highlight/light.scss";
+}
+
+[data-scheme="dark"] {
+    /* Set the code block base colors to match Monokai/Github's contrast dark theme */
+    --pre-text-color: #C9D1D9; 
+    --pre-background-color: #272822;
+    @import "partials/highlight/dark.scss";
+}
+
+:root {
+    --menu-icon-separation: 40px;
+    --container-padding: 15px;
+    --widget-separation: var(--section-separation);
+}
+
+/* -------------------------------------------------------------------------------------- */
+/* WIDGET STYLING                                                                         */
+/* -------------------------------------------------------------------------------------- */
+
+/* 1. Target the sidebar profile link (@crxso) to ALWAYS use the accent color */
+.sidebar-profile a {
+    color: var(--accent-color) !important;
+}
+
+/* 2. Target the main navigation links (Home, About, Archives, Search, Links) 
+   and force them to use the generic body text color in both modes. */
+.sidebar-nav a,
+.sidebar-nav a span,
+.sidebar-nav a div { 
+    color: var(--body-text-color) !important;
+}
+
+/* 3. Ensure the Dark Mode toggle (if it's a link) is also body color */
+.dark-mode-switch a {
+    color: var(--body-text-color) !important;
+}
+
+/* 4. Ensure the TOC widget uses the card's text color for non-link elements (like the # header) */
+.widget--toc {
+    &, * {
+        /* In dark mode, this resolves to #fff, ensuring titles and numbers are visible */
+        color: var(--card-text-color-main); 
+    }
+    
+    #TableOfContents {
+        a:hover,
+        a:active {
+            /* Change the link text color on hover */
+            color: var(--accent-color) !important;
+        }
+
+        /* This targets the counter number (e.g., '1.', '2.1.') */
+        li a:first-of-type:hover::before {
+            color: var(--accent-color) !important;
+        }
+
+        /* NEW FIX ADDED HERE: Force inline code block text to change color on hover */
+        a:hover code {
+            color: var(--accent-color) !important;
+        }
+    }
+}
