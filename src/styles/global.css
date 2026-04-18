@@ -1,0 +1,281 @@
+@import "tailwindcss";
+
+/* ============================================
+   CRISTIAN ORNELAS | GLOBAL STYLES
+   GitHub Color Scheme
+   ============================================ */
+
+@theme {
+  --color-void: #050505;
+  --color-void-light: #0F0F0F;
+  --color-void-surface: #1A1A1A;
+  --color-slate-bg: #FFFFFF;
+  --color-slate-surface: #F6F8FA;
+  --color-slate-muted: #EAEEF2;
+  /* Sunset accent (replaces former GitHub blue) */
+  --color-sunset: #FF8F3F;
+  --color-sunset-light: #FFB26B;
+  --color-sunset-deep: #E85D04;
+  --color-sunset-soft: rgba(232, 93, 4, 0.14);
+  /* Legacy blue tokens preserved for any residual usage (kept for safety) */
+  --color-blue: #388BFD;
+  --color-blue-light: #79C0FF;
+  --color-blue-soft: rgba(56, 139, 253, 0.12);
+  --color-emerald: #56D364;
+  --color-emerald-light: #7EE787;
+  --color-emerald-soft: rgba(86, 211, 100, 0.14);
+  --color-red: #FF7B72;
+  --color-red-light: #FFA198;
+  --color-red-soft: rgba(255, 123, 114, 0.14);
+  --color-yellow: #E3B341;
+  --color-yellow-soft: rgba(227, 179, 65, 0.14);
+  --color-indigo: #A78BFA;
+  --color-indigo-soft: rgba(167, 139, 250, 0.16);
+  --color-border-lt: #D0D7DE;
+  --color-border-dk: #30363D;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+:root {
+  --bg-primary: var(--color-slate-bg);
+  --bg-secondary: var(--color-slate-surface);
+  --bg-tertiary: var(--color-slate-muted);
+  --text-primary: #1F2328;
+  --text-secondary: #656D76;
+  --text-muted: #8B949E;
+  --border: var(--color-border-lt);
+  --card-bg: var(--color-slate-bg);
+  --nav-bg: rgba(255, 255, 255, 0.88);
+  /* Light-mode contrast overrides — emerald preserved for status chips */
+  --color-emerald: #1A7F37;
+  --color-emerald-light: #2DA44E;
+  --color-emerald-soft: rgba(45, 164, 78, 0.32);
+  --color-red: #CF222E;
+  --color-red-soft: rgba(207, 34, 46, 0.30);
+  --color-yellow: #9A6700;
+  --color-yellow-soft: rgba(191, 135, 0, 0.32);
+  --color-indigo: #6D4AFF;
+  --color-indigo-soft: rgba(109, 74, 255, 0.22);
+  /* Deep red accent (light mode) */
+  --accent: #B91C1C;
+  --accent-light: #DC2626;
+  --accent-soft: rgba(185, 28, 28, 0.12);
+  /* Slate gray secondary */
+  --secondary: #475569;
+  --secondary-light: #64748B;
+  --secondary-soft: rgba(71, 85, 105, 0.10);
+}
+
+.dark {
+  /* Emerald preserved for status/active chips */
+  --color-emerald: #56D364;
+  --color-emerald-light: #7EE787;
+  --color-emerald-soft: rgba(86, 211, 100, 0.14);
+  --color-red: #FF7B72;
+  --color-red-soft: rgba(255, 123, 114, 0.14);
+  --color-yellow: #E3B341;
+  --color-yellow-soft: rgba(227, 179, 65, 0.14);
+  --bg-primary: transparent;
+  --bg-secondary: transparent;
+  --bg-tertiary: var(--color-void-surface);
+  --text-primary: #F0F6FC;
+  --text-secondary: #B1BAC4;
+  --text-muted: #6E7681;
+  --border: var(--color-border-dk);
+  --card-bg: var(--color-void-light);
+  --nav-bg: rgba(5, 5, 5, 0.88);
+  /* Deep red accent (dark mode — brighter to pop on near-black bg) */
+  --accent: #EF4444;
+  --accent-light: #F87171;
+  --accent-soft: rgba(239, 68, 68, 0.16);
+  /* Slate gray secondary */
+  --secondary: #94A3B8;
+  --secondary-light: #CBD5E1;
+  --secondary-soft: rgba(148, 163, 184, 0.12);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Nav logo: red in light mode, white in dark mode */
+.nav-logo { color: var(--accent); transition: opacity 0.25s ease, visibility 0.25s ease; }
+.dark .nav-logo { color: #F0F6FC; }
+/* Hidden state — used on home hero before user scrolls past name */
+.nav-logo.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.7;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+  max-width: 100vw;
+  position: relative;
+  /* Light-mode sunset: warm orange / coral / amber corner glows */
+  background-image:
+    radial-gradient(ellipse 90% 60% at 0% 0%, rgba(232, 93, 4, 0.11) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 55% at 100% 10%, rgba(255, 143, 63, 0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 65% at 100% 100%, rgba(249, 115, 22, 0.09) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 55% at 0% 100%, rgba(255, 178, 107, 0.09) 0%, transparent 55%),
+    linear-gradient(135deg, rgba(232, 93, 4, 0.05) 0%, transparent 40%, transparent 60%, rgba(255, 143, 63, 0.04) 100%);
+  background-attachment: fixed;
+}
+
+/* Dark-mode sunset: warm orange/red glows, dark shadow replaces the violet */
+.dark body {
+  background-color: #050505;
+  background-image:
+    /* Sunset orange / coral corner glows */
+    radial-gradient(ellipse 95% 65% at 0% 0%, rgba(255, 143, 63, 0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 85% 60% at 100% 10%, rgba(255, 95, 60, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 95% 70% at 100% 100%, rgba(255, 178, 107, 0.06) 0%, transparent 60%),
+    /* Bottom-left: dark/gray shadow instead of violet */
+    radial-gradient(ellipse 85% 60% at 0% 100%, rgba(20, 20, 22, 0.55) 0%, transparent 60%),
+    /* Warm diagonal scanline */
+    linear-gradient(135deg, rgba(255, 143, 63, 0.03) 0%, transparent 40%, transparent 60%, rgba(232, 93, 4, 0.025) 100%);
+  background-attachment: fixed;
+}
+
+/* Mobile: dial sunset gradient way down so it's barely there */
+@media (max-width: 768px) {
+  body {
+    background-image:
+      radial-gradient(ellipse 95% 65% at 0% 0%, rgba(232, 93, 4, 0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 85% 60% at 100% 10%, rgba(255, 143, 63, 0.04) 0%, transparent 60%),
+      radial-gradient(ellipse 95% 70% at 100% 100%, rgba(249, 115, 22, 0.035) 0%, transparent 60%),
+      radial-gradient(ellipse 85% 60% at 0% 100%, rgba(255, 178, 107, 0.035) 0%, transparent 60%),
+      linear-gradient(135deg, rgba(232, 93, 4, 0.02) 0%, transparent 40%, transparent 60%, rgba(255, 143, 63, 0.018) 100%);
+  }
+  .dark body {
+    background-image:
+      radial-gradient(ellipse 95% 65% at 0% 0%, rgba(255, 143, 63, 0.035) 0%, transparent 65%),
+      radial-gradient(ellipse 85% 60% at 100% 10%, rgba(255, 95, 60, 0.028) 0%, transparent 65%),
+      radial-gradient(ellipse 95% 70% at 100% 100%, rgba(255, 178, 107, 0.022) 0%, transparent 65%),
+      radial-gradient(ellipse 85% 60% at 0% 100%, rgba(20, 20, 22, 0.35) 0%, transparent 65%),
+      linear-gradient(135deg, rgba(255, 143, 63, 0.012) 0%, transparent 40%, transparent 60%, rgba(232, 93, 4, 0.01) 100%);
+  }
+}
+
+::selection {
+  background: var(--accent);
+  color: white;
+}
+
+/* Page transitions are handled by Astro's ClientRouter (astro:transitions) */
+
+/* Section labels ("ABOUT", "EXPERIENCE", "GITHUB", etc.) are uppercase+tracked.
+   Render them in JetBrains Mono for a terminal/file-header aesthetic. */
+.uppercase[class*="tracking-"] {
+  font-family: var(--font-mono);
+  letter-spacing: 0.12em;
+}
+
+/* Reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* Honor OS-level "Reduce Motion" accessibility preference — reveals appear
+   immediately, no fade or slide. Everything else remains unchanged. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    transition-delay: 0s !important;
+  }
+}
+
+.stagger-1 { transition-delay: 0.06s; }
+.stagger-2 { transition-delay: 0.12s; }
+.stagger-3 { transition-delay: 0.18s; }
+.stagger-4 { transition-delay: 0.24s; }
+.stagger-5 { transition-delay: 0.30s; }
+.stagger-6 { transition-delay: 0.36s; }
+.stagger-7 { transition-delay: 0.42s; }
+.stagger-8 { transition-delay: 0.48s; }
+
+/* Clean card hover */
+.card-hover {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+.dark .card-hover:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   Reduced-motion accessibility
+   Honors users who have "Reduce Motion" enabled
+   in their OS (macOS Accessibility, Windows
+   System Settings, iOS, Android, etc.).
+   Content remains fully legible and functional;
+   we just strip animation/transition pizzazz.
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  /* Reveals: show immediately, no fade/slide */
+  .reveal,
+  .reveal.visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    transition-delay: 0s !important;
+  }
+
+  /* Card hover: no lift/transition */
+  .card-hover,
+  .card-hover:hover {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* Kill all animations + transitions site-wide */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable smooth-scroll at the root */
+  html { scroll-behavior: auto !important; }
+
+  /* Terminal cursor: stop blinking */
+  .terminal-cursor { animation: none !important; opacity: 1 !important; }
+}
+
+/* Form styling */
+.form-input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.form-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.form-input::placeholder { color: var(--text-muted); }

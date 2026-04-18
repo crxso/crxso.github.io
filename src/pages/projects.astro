@@ -1,0 +1,47 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { projects } from "../data/resume";
+---
+
+<Layout title="Projects | Cristian Ornelas">
+  <section class="pt-24 md:pt-32 pb-10 md:pb-16 transition-colors duration-300" style="background: var(--bg-primary);">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="reveal">
+        <span class="text-[13px] md:text-[15px] font-semibold tracking-[0.1em] uppercase" style="color: var(--accent);">Projects</span>
+        <h1 class="text-[clamp(1.5rem,5vw,3rem)] font-bold mt-2 mb-2" style="color: var(--text-primary);">Engineering Projects</h1>
+        <div class="w-10 h-0.5 rounded-full mt-4" style="background: var(--accent);"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pb-16 md:pb-28 transition-colors duration-300" style="background: var(--bg-primary);">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-col gap-4 md:gap-5">
+        {projects.map((project, i) => (
+          <div class={`reveal stagger-${i+1} rounded-2xl border p-4 md:p-7 card-hover group`} style="background: var(--card-bg); border-color: var(--border);">
+            <div class="flex items-start justify-between flex-wrap gap-2 md:gap-3 mb-3 md:mb-4">
+              <div>
+                <h3 class="text-base md:text-lg font-bold transition-colors duration-200 group-hover:text-[var(--accent)]" style="color: var(--text-primary);">{project.title}</h3>
+                <span class="font-[family-name:var(--font-mono)] text-[13px] md:text-[15px]" style="color: var(--text-muted);">{project.tech}</span>
+              </div>
+              <span class="text-[13px] md:text-[15px] font-medium px-2 md:px-2.5 py-0.5 md:py-1 rounded-lg flex-shrink-0" style="background: var(--accent-soft); color: var(--accent);">{project.period}</span>
+            </div>
+            <p class="text-[13px] md:text-[15px] font-medium mb-4 md:mb-5 leading-relaxed italic" style="color: var(--text-primary); opacity: 0.85;">{project.description}</p>
+            <ul class="flex flex-col gap-1.5 md:gap-2 mb-4 md:mb-5 list-disc pl-5">
+              {project.bullets.map((b) => (
+                <li class="text-[13px] md:text-[15px] leading-relaxed" style="color: var(--text-secondary);">
+                  {b}
+                </li>
+              ))}
+            </ul>
+            <div class="flex gap-1.5 md:gap-2 flex-wrap">
+              {project.tags.map((tag) => (
+                <span class="text-[13px] md:text-[15px] font-medium px-2 md:px-2.5 py-0.5 md:py-1 rounded-md border" style="background: var(--card-bg); color: var(--text-primary); border-color: var(--border); box-shadow: 0 2px 10px var(--color-indigo-soft);">{tag}</span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

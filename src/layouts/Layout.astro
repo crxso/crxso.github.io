@@ -1,0 +1,298 @@
+---
+import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Cristian Ornelas | Application Security Engineer",
+  description = "Application Security Engineer specializing in threat modeling, secure architecture, and automated security tooling at scale.",
+} = Astro.props;
+
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/experience", label: "Experience" },
+  { href: "/projects", label: "Projects" },
+  { href: "/blog", label: "Blog" },
+  { href: "/contact", label: "Contact" },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://crxso.github.io/" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="https://crxso.github.io/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://crxso.github.io/" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://crxso.github.io/og-image.png" />
+
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Non-blocking font load: browser paints with system fallback immediately, swaps in custom fonts when ready -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    </noscript>
+    <script is:inline>
+      (function () {
+        function wantsDark() {
+          const stored = localStorage.getItem("theme");
+          return stored === "dark" || (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        }
+        // Initial page load
+        document.documentElement.classList.toggle("dark", wantsDark());
+        // CRITICAL: set class on the incoming document BEFORE the swap so the new
+        // page paints in dark mode on frame 1 — no white flash.
+        document.addEventListener("astro:before-swap", (ev) => {
+          ev.newDocument.documentElement.classList.toggle("dark", wantsDark());
+        });
+        // Safety net: re-apply right after swap in case anything cleared it.
+        document.addEventListener("astro:after-swap", () => {
+          document.documentElement.classList.toggle("dark", wantsDark());
+        });
+      })();
+    </script>
+    <ClientRouter />
+  </head>
+  <body class="min-h-screen">
+
+    <!-- Navigation -->
+    <nav id="nav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="/" class="nav-logo text-[15px] font-semibold tracking-wide transition-colors duration-300" style="font-family: var(--font-mono);">
+          cristian<span class="opacity-30">.</span>
+        </a>
+
+        <!-- Desktop -->
+        <div class="hidden md:flex items-center gap-7">
+          {navLinks.map((link) => (
+            <a
+              href={link.href}
+              class:list={[
+                "text-[15px] font-medium transition-colors duration-200 relative",
+                currentPath === link.href || (link.href !== "/" && currentPath.startsWith(link.href))
+                  ? "text-[var(--accent)]"
+                  : "text-[var(--text-muted)] hover:text-[var(--text-primary)]",
+              ]}
+            >
+              {link.label}
+            </a>
+          ))}
+
+          <button
+            id="themeToggle"
+            class="w-8 h-8 rounded-lg border flex items-center justify-center transition-all duration-200 hover:border-[var(--accent)] cursor-pointer"
+            style="border-color: var(--border); background: var(--card-bg);"
+            aria-label="Toggle dark mode"
+          >
+            <Icon name="lucide:sun" class="sun-icon w-3.5 h-3.5" style="color: var(--text-muted);" />
+            <Icon name="lucide:moon" class="moon-icon w-3.5 h-3.5 hidden" style="color: var(--text-muted);" />
+          </button>
+        </div>
+
+        <!-- Mobile -->
+        <div class="flex items-center gap-3 md:hidden">
+          <button id="themeToggleMobile" class="w-8 h-8 rounded-lg border flex items-center justify-center cursor-pointer" style="border-color: var(--border); background: var(--card-bg);" aria-label="Toggle dark mode">
+            <Icon name="lucide:sun" class="sun-icon w-3.5 h-3.5" style="color: var(--text-muted);" />
+            <Icon name="lucide:moon" class="moon-icon w-3.5 h-3.5 hidden" style="color: var(--text-muted);" />
+          </button>
+          <button id="menuToggle" class="flex flex-col gap-[5px] p-2 cursor-pointer" aria-label="Toggle menu">
+            <span class="w-5 h-[1.5px] transition-all duration-300" style="background: var(--text-primary);"></span>
+            <span class="w-5 h-[1.5px] transition-all duration-300" style="background: var(--text-primary);"></span>
+            <span class="w-5 h-[1.5px] transition-all duration-300" style="background: var(--text-primary);"></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed inset-0 z-40 flex flex-col items-center justify-center gap-6 opacity-0 pointer-events-none transition-opacity duration-300" style="background: rgba(10, 10, 15, 0.97); backdrop-filter: blur(20px);">
+      {navLinks.map((link) => (
+        <a href={link.href} class="text-xl font-medium text-[#F4F4F8] hover:text-[var(--color-indigo-light)] transition-colors duration-200">
+          {link.label}
+        </a>
+      ))}
+    </div>
+
+    <main>
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t pt-10 pb-8 transition-colors duration-300" style="border-color: var(--border);">
+      <div class="max-w-7xl mx-auto px-6">
+        <!-- Footer nav — on mobile: 5 links on row 1, Contact on row 2 -->
+        <nav class="flex flex-wrap items-center justify-center gap-x-3.5 md:gap-x-7 gap-y-3 mb-7">
+          {navLinks.map((link) => (
+            <a
+              href={link.href}
+              class:list={[
+                "text-[13px] md:text-[15px] font-medium transition-colors duration-200",
+                link.label === "Contact" ? "basis-full md:basis-auto text-center" : "",
+                currentPath === link.href || (link.href !== "/" && currentPath.startsWith(link.href))
+                  ? "text-[var(--accent)]"
+                  : "text-[var(--text-muted)] hover:text-[var(--accent)]",
+              ]}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+
+        <!-- Divider -->
+        <div class="border-t mb-6" style="border-color: var(--border);"></div>
+
+        <!-- Name + copyright row -->
+        <div class="flex items-center justify-between text-[15px]" style="color: var(--text-muted);">
+          <span class="font-medium" style="color: var(--text-secondary);">Cristian Ornelas</span>
+          <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" class="hidden sm:inline-flex items-center gap-1.5 hover:text-[var(--accent)] transition-colors" aria-label="Back to top">
+            <Icon name="lucide:arrow-up" class="w-3.5 h-3.5" />
+            Back to top
+          </a>
+          <span>&copy; {new Date().getFullYear()}</span>
+        </div>
+      </div>
+    </footer>
+
+    <script is:inline>
+      // Scroll handler: bound once to window (persists across client-side navigations)
+      function bindScrollOnce() {
+        if (window.__crxScrollBound) return;
+        window.__crxScrollBound = true;
+        function hs() {
+          const n = document.getElementById("nav");
+          if (!n) return;
+          if (window.scrollY > 60) {
+            n.style.background = "var(--nav-bg)";
+            n.style.backdropFilter = "blur(16px)";
+            n.style.borderBottom = "1px solid var(--border)";
+          } else {
+            n.style.background = "transparent";
+            n.style.backdropFilter = "none";
+            n.style.borderBottom = "1px solid transparent";
+          }
+        }
+        window.__crxHs = hs;
+        window.addEventListener("scroll", hs, { passive: true });
+      }
+
+      // Per-page setup: idempotent — safe to call multiple times.
+      // Uses .onclick assignment (replaces, not stacks) instead of addEventListener
+      // so listeners don't double-fire if this runs on both initial load AND astro:page-load.
+      function initPage() {
+        bindScrollOnce();
+        if (typeof window.__crxHs === "function") window.__crxHs();
+
+        function updateThemeIcons() {
+          const d = document.documentElement.classList.contains("dark");
+          document.querySelectorAll(".sun-icon").forEach(e => e.style.display = d ? "none" : "block");
+          document.querySelectorAll(".moon-icon").forEach(e => e.style.display = d ? "block" : "none");
+        }
+        function toggleTheme() {
+          const d = document.documentElement.classList.toggle("dark");
+          localStorage.setItem("theme", d ? "dark" : "light");
+          updateThemeIcons();
+        }
+        const tt = document.getElementById("themeToggle");
+        const ttm = document.getElementById("themeToggleMobile");
+        if (tt) tt.onclick = toggleTheme;
+        if (ttm) ttm.onclick = toggleTheme;
+        updateThemeIcons();
+
+        const mt = document.getElementById("menuToggle");
+        const mm = document.getElementById("mobileMenu");
+        let mo = false;
+        if (mt) mt.onclick = () => {
+          mo = !mo;
+          if (!mm) return;
+          mm.style.opacity = mo ? "1" : "0";
+          mm.style.pointerEvents = mo ? "all" : "none";
+          document.body.style.overflow = mo ? "hidden" : "";
+        };
+        mm?.querySelectorAll("a").forEach(l => { l.onclick = () => {
+          mo = false;
+          if (mm) { mm.style.opacity = "0"; mm.style.pointerEvents = "none"; document.body.style.overflow = ""; }
+        }; });
+
+        const ro = new IntersectionObserver((es) => {
+          es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); ro.unobserve(e.target); } });
+        }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
+        document.querySelectorAll(".reveal").forEach(e => ro.observe(e));
+
+        // Home page only: hide nav logo while the hero "Cristian Ornelas" name is visible.
+        // When user scrolls past the name, show the logo.
+        const navLogo = document.querySelector(".nav-logo");
+        if (navLogo) {
+          const isHome = window.location.pathname === "/";
+          if (!isHome) {
+            navLogo.classList.remove("is-hidden");
+          } else {
+            const pickName = () => {
+              const nD = document.getElementById("home-name-desktop");
+              const nM = document.getElementById("home-name-mobile");
+              const rD = nD?.getBoundingClientRect();
+              const rM = nM?.getBoundingClientRect();
+              if (rD && rD.height > 0) return nD;
+              if (rM && rM.height > 0) return nM;
+              return null;
+            };
+            const updateLogo = () => {
+              const t = pickName();
+              if (!t) return; // DOM not ready yet
+              const r = t.getBoundingClientRect();
+              // Hide logo while any part of the name is visible in the viewport
+              const inView = r.bottom > 0 && r.top < window.innerHeight;
+              if (inView) navLogo.classList.add("is-hidden");
+              else navLogo.classList.remove("is-hidden");
+            };
+            // Initial state — hide immediately so there's no flash
+            navLogo.classList.add("is-hidden");
+            // Set up scroll/resize listener (namespaced so we can replace it on page nav)
+            if (window.__crxLogoScroll) window.removeEventListener("scroll", window.__crxLogoScroll);
+            if (window.__crxLogoResize) window.removeEventListener("resize", window.__crxLogoResize);
+            window.__crxLogoScroll = updateLogo;
+            window.__crxLogoResize = updateLogo;
+            window.addEventListener("scroll", updateLogo, { passive: true });
+            window.addEventListener("resize", updateLogo);
+            // Run once now and on the next frame (covers re-render timing)
+            updateLogo();
+            requestAnimationFrame(updateLogo);
+          }
+        }
+      }
+
+      // Only bind once via astro:page-load (Astro fires it on initial load too when
+      // ClientRouter is active) — no explicit call to avoid double-init.
+      document.addEventListener("astro:page-load", initPage);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,171 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import { posts, categoryColors } from "../../data/blog";
+
+export function getStaticPaths() {
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+
+function renderMarkdown(content: string): string {
+  let html = content;
+
+  // Code blocks
+  html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_: string, lang: string, code: string) => {
+    const escaped = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return `<pre><code class="language-${lang || 'text'}">${escaped}</code></pre>`;
+  });
+
+  // Inline code
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+  // Images
+  html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" loading="lazy" />');
+
+  // Links
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+
+  // Headers
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+
+  // Bold
+  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+  // Italic
+  html = html.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>');
+
+  // Horizontal rules
+  html = html.replace(/^---$/gm, '<hr />');
+
+  // Tables
+  const tableRegex = /(\|.+\|\n)+/g;
+  html = html.replace(tableRegex, (tableBlock: string) => {
+    const rows = tableBlock.trim().split('\n');
+    if (rows.length < 2) return tableBlock;
+    let table = '<table>';
+    let inBody = false;
+    rows.forEach((row: string, idx: number) => {
+      if (row.match(/^\|\s*:?-+/)) return;
+      const cells = row.split('|').filter((c: string) => c.trim() !== '');
+      const tag = idx === 0 ? 'th' : 'td';
+      if (idx === 0) table += '<thead>';
+      if (idx === 2 && !inBody) { table += '<tbody>'; inBody = true; }
+      table += '<tr>';
+      cells.forEach((cell: string) => {
+        const clean = cell.replace(/<span[^>]*>/g, '').replace(/<\/span>/g, '').trim();
+        table += `<${tag}>${clean}</${tag}>`;
+      });
+      table += '</tr>';
+      if (idx === 0) table += '</thead>';
+    });
+    if (inBody) table += '</tbody>';
+    table += '</table>';
+    return `<div class="table-scroll">${table}</div>`;
+  });
+
+  // Unordered lists
+  html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>[\s\S]*?<\/li>\n?)+/g, (match: string) => `<ul>${match}</ul>`);
+
+  // Blockquotes
+  html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
+  html = html.replace(/<\/blockquote>\n<blockquote>/g, '<br />');
+
+  // Paragraphs
+  html = html.replace(/^(?!<[a-z/]|$|\s*$)(.+)$/gm, '<p>$1</p>');
+  html = html.replace(/<p>\s*<\/p>/g, '');
+
+  return html;
+}
+
+const renderedContent = renderMarkdown(post.content);
+---
+
+<Layout title={`${post.title} | Cristian Ornelas`}>
+  <!-- Hero Banner -->
+  <section class="relative pt-[68px] pb-0">
+    <div class="h-72 md:h-[30rem] overflow-hidden relative">
+      <img src={post.image} alt={post.title} class="w-full h-full object-cover" style="object-position: center 25%;" />
+      <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-void)] via-[rgba(10,10,15,0.4)] to-transparent"></div>
+    </div>
+  </section>
+
+  <!-- Article Header — always sits below image, theme-aware text -->
+  <section class="article-header relative z-10 pt-6 md:pt-8 pb-4 md:pb-6" style="background: var(--bg-primary);">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="reveal">
+        <div class="flex items-center gap-1.5 md:gap-2 mb-3 md:mb-4 flex-wrap">
+          {post.categories.map((cat: string) => (
+            <span class="text-[13px] md:text-[15px] font-bold tracking-[0.06em] uppercase px-2 md:px-3 py-1 md:py-1.5 rounded-md" style={`background: ${categoryColors[cat] || '#2F81F7'}; color: #FFFFFF;`}>{cat}</span>
+          ))}
+          {post.tags.map((tag: string) => (
+            <span class="article-tag text-[13px] md:text-[15px] font-medium tracking-[0.05em] uppercase px-2 md:px-3 py-1 md:py-1.5 rounded-md">{tag}</span>
+          ))}
+        </div>
+        <h1 class="article-title text-[clamp(1.3rem,4vw,2.5rem)] font-bold leading-tight mb-2 md:mb-3">{post.title}</h1>
+        <p class="article-desc text-[13px] md:text-[15px] mb-3 md:mb-4">{post.description}</p>
+        <div class="article-meta flex items-center gap-3 md:gap-4 font-[family-name:var(--font-mono)] text-[13px] md:text-[15px]">
+          <span>
+            {new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+          </span>
+          <span>·</span>
+          <span>@crxso</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Article Content -->
+  <section class="pb-16 md:pb-24 transition-colors duration-400" style="background: var(--bg-primary);">
+    <div class="max-w-6xl mx-auto px-6">
+      <article class="prose-article" set:html={renderedContent} />
+
+      <div class="reveal mt-8 md:mt-12 pt-6 md:pt-8 border-t" style="border-color: var(--border);">
+        <a href="/blog" class="inline-flex items-center gap-2 font-[family-name:var(--font-mono)] text-[13px] md:text-[15px] font-medium transition-colors duration-300 hover:text-[var(--accent-text)]" style="color: var(--text-muted);">
+          <Icon name="lucide:arrow-left" class="w-3.5 h-3.5" />
+          Back to all posts
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  /* Article header — theme-aware, sits on page background below image */
+  .article-title { color: var(--text-primary); }
+  .article-desc { color: var(--text-secondary); }
+  .article-meta { color: var(--text-muted); }
+  .article-tag { background: var(--bg-tertiary); color: var(--text-secondary); }
+
+  .prose-article { font-size: 0.85rem; line-height: 1.7; color: var(--text-secondary); }
+  @media (min-width: 768px) {
+    .prose-article { font-size: 0.95rem; line-height: 1.8; }
+  }
+  .prose-article h2 { font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-top: 2.5rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+  .prose-article h3 { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); margin-top: 2rem; margin-bottom: 0.75rem; }
+  .prose-article p { margin-bottom: 1rem; }
+  .prose-article strong { color: var(--text-primary); font-weight: 600; }
+  .prose-article a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 2px; }
+  .prose-article ul, .prose-article ol { padding-left: 1.5rem; margin-bottom: 1rem; }
+  .prose-article ul { list-style: disc; }
+  .prose-article ol { list-style: decimal; }
+  .prose-article li { margin-bottom: 0.4rem; color: var(--text-secondary); }
+  .prose-article code { font-family: var(--font-mono); font-size: 0.82rem; padding: 0.15rem 0.4rem; border-radius: 4px; background: var(--bg-tertiary); color: var(--accent-text); }
+  .prose-article pre { background: var(--color-void) !important; border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin: 1.25rem 0; }
+  .prose-article pre code { background: none; padding: 0; color: #A1A1AA; font-size: 0.8rem; line-height: 1.6; }
+  .prose-article img { border-radius: 8px; border: 1px solid var(--border); margin: 1.5rem 0; max-width: 100%; }
+  .prose-article hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+  .prose-article .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1.25rem 0; }
+  .prose-article .table-scroll::-webkit-scrollbar { height: 6px; }
+  .prose-article .table-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .prose-article table { min-width: 500px; width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .prose-article th { text-align: left; padding: 0.6rem 0.8rem; border-bottom: 2px solid var(--border); color: var(--text-primary); font-weight: 600; font-size: 0.78rem; }
+  .prose-article td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+  .prose-article blockquote { border-left: 3px solid var(--accent-text); padding: 0.75rem 1.25rem; margin: 1.25rem 0; background: var(--color-cyber-soft); border-radius: 0 8px 8px 0; color: var(--text-secondary); font-style: italic; }
+</style>

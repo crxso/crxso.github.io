@@ -1,0 +1,250 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import { personal } from "../data/resume";
+
+// Read Web3Forms access key at build time (server-side).
+// Name must match GitHub secret: PUBLIC_WEB3FORMS_ACCESS_KEY
+const WEB3FORMS_KEY =
+  import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY ||
+  process.env.PUBLIC_WEB3FORMS_ACCESS_KEY ||
+  "";
+---
+
+<Layout title="Contact | Cristian Ornelas">
+  <section class="pt-24 md:pt-32 pb-10 md:pb-16 transition-colors duration-300" style="background: var(--bg-primary);">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="reveal">
+        <span class="text-[13px] md:text-[15px] font-semibold tracking-[0.1em] uppercase" style="color: var(--accent);">Contact</span>
+        <h1 class="text-[clamp(1.5rem,5vw,3rem)] font-bold mt-2 mb-2" style="color: var(--text-primary);">Get in Touch</h1>
+        <div class="w-10 h-0.5 rounded-full mt-4" style="background: var(--accent);"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pb-16 md:pb-28 transition-colors duration-300" style="background: var(--bg-primary);">
+    <div class="max-w-2xl mx-auto px-6">
+      <p class="reveal text-[13px] md:text-[15px] leading-relaxed mb-5 md:mb-8 text-center" style="color: var(--text-secondary);">Open to connecting on security engineering, AppSec tooling, or collaboration opportunities.</p>
+
+      <div class="reveal stagger-2 ide-window">
+          <div class="ide-bar">
+            <span class="ide-dot ide-dot-red" aria-hidden="true"></span>
+            <span class="ide-dot ide-dot-yellow" aria-hidden="true"></span>
+            <span class="ide-dot ide-dot-green" aria-hidden="true"></span>
+            <span class="ide-tab">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8B949E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+              contact.py
+            </span>
+          </div>
+          <div class="ide-body">
+            <div class="ide-lines">
+              <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span>
+            </div>
+            <div class="ide-code">
+              <form id="contactForm" class="flex flex-col gap-4" novalidate>
+                <div>
+                  <label class="ide-label"><span class="ide-keyword">name</span> <span class="ide-op">=</span></label>
+                  <input id="cf-name" name="name" type="text" class="ide-input" placeholder="Your name" required />
+                </div>
+                <div>
+                  <label class="ide-label"><span class="ide-keyword">email</span> <span class="ide-op">=</span></label>
+                  <input id="cf-email" name="email" type="email" class="ide-input" placeholder="you@example.com" required />
+                </div>
+                <div>
+                  <label class="ide-label"><span class="ide-keyword">subject</span> <span class="ide-op">=</span></label>
+                  <input id="cf-subject" name="subject" type="text" class="ide-input" />
+                </div>
+                <div>
+                  <label class="ide-label"><span class="ide-keyword">message</span> <span class="ide-op">=</span></label>
+                  <textarea id="cf-message" name="message" class="ide-input" rows="4" required></textarea>
+                </div>
+                <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true" />
+                <div class="flex items-center gap-3 flex-wrap">
+                  <button id="cf-submit" type="submit" class="self-start inline-flex items-center gap-2 text-[15px] font-semibold px-5 py-2.5 rounded-lg border transition-all duration-200 hover:-translate-y-0.5 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed" style="background: #161B22; color: #F0F6FC; border-color: #30363D; box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45), 0 0 20px var(--accent-soft);">
+                    <span id="cf-submit-label">Send Message</span>
+                    <Icon name="lucide:send" class="w-3.5 h-3.5" />
+                  </button>
+                  <span id="cf-status" class="text-[15px] font-[family-name:var(--font-mono)]" aria-live="polite"></span>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+
+  <script is:inline define:vars={{ accessKey: WEB3FORMS_KEY }}>
+    (function () {
+      const form = document.getElementById("contactForm");
+      if (!form) { console.warn("[contact] form not found"); return; }
+      console.log("[contact] handler attached, key length:", accessKey ? accessKey.length : 0);
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const btn = document.getElementById("cf-submit");
+        const label = document.getElementById("cf-submit-label");
+        const status = document.getElementById("cf-status");
+
+        const setStatus = (msg, color) => {
+          status.textContent = msg;
+          status.style.color = color;
+        };
+
+        if (!accessKey) {
+          setStatus("Form not configured (missing access key).", "#EF4444");
+          console.error("[contact] PUBLIC_WEB3FORMS_ACCESS_KEY is empty");
+          return;
+        }
+
+        const name = document.getElementById("cf-name").value.trim();
+        const email = document.getElementById("cf-email").value.trim();
+        const message = document.getElementById("cf-message").value.trim();
+        if (!name || !email || !message) {
+          setStatus("Please fill in name, email, and message.", "#EF4444");
+          return;
+        }
+
+        btn.disabled = true;
+        const originalLabel = label.textContent;
+        label.textContent = "Sending...";
+        setStatus("", "");
+
+        const payload = {
+          access_key: accessKey,
+          name: name,
+          email: email,
+          subject: document.getElementById("cf-subject").value.trim() || "Contact from crxso.github.io",
+          message: message,
+          botcheck: form.querySelector('input[name="botcheck"]').checked ? "true" : "",
+          from_name: "crxso.github.io",
+        };
+
+        console.log("[contact] submitting to Web3Forms...");
+
+        try {
+          const res = await fetch("https://api.web3forms.com/submit", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json().catch(() => ({}));
+          console.log("[contact] response:", res.status, data);
+          if (res.ok && data.success) {
+            setStatus("\u2713 Message sent \u2014 I'll reply soon.", "#10B981");
+            form.reset();
+          } else {
+            setStatus(data.message || "Something went wrong. Please try again.", "#EF4444");
+          }
+        } catch (err) {
+          console.error("[contact] network error:", err);
+          setStatus("Network error. Please try again.", "#EF4444");
+        } finally {
+          btn.disabled = false;
+          label.textContent = originalLabel;
+        }
+      });
+    })();
+  </script>
+
+  <style>
+    /* IDE theme — mirrors the home-page terminal palette (always dark) */
+    .ide-window {
+      --ide-bg: #0D1117;
+      --ide-bar: #161B22;
+      --ide-border: #30363D;
+      --ide-tab-text: #C9D1D9;
+      --ide-line-num: #484F58;
+      --ide-line-border: #21262D;
+      --ide-input-bg: #161B22;
+      --ide-input-text: #C9D1D9;
+      --ide-input-placeholder: #6E7681;
+      --ide-keyword: #F0F6FC;
+      --ide-op: #8B949E;
+      --ide-comment: #6A9955;
+      --ide-shadow: rgba(0, 0, 0, 0.35);
+    }
+    .ide-window {
+      background: var(--ide-bg);
+      border: 1px solid var(--ide-border);
+      border-radius: 10px;
+      overflow: hidden;
+      font-family: var(--font-mono);
+      box-shadow: 0 10px 40px var(--ide-shadow);
+    }
+    .ide-bar {
+      background: var(--ide-bar);
+      padding: 9px 14px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      border-bottom: 1px solid var(--ide-border);
+    }
+    .ide-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+    .ide-dot-red { background: #FF5F56; }
+    .ide-dot-yellow { background: #FFBD2E; }
+    .ide-dot-green { background: #27C93F; }
+    .ide-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 10px;
+      padding: 4px 12px;
+      background: var(--ide-bg);
+      border: 1px solid var(--ide-border);
+      border-bottom: 1px solid var(--ide-bg);
+      border-radius: 6px 6px 0 0;
+      font-size: 13px;
+      color: var(--ide-tab-text);
+    }
+    .ide-body {
+      display: flex;
+      padding: 18px 0;
+    }
+    .ide-lines {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      padding: 0 12px 0 16px;
+      font-size: 13px;
+      line-height: 2.8;
+      color: var(--ide-line-num);
+      user-select: none;
+      border-right: 1px solid var(--ide-line-border);
+    }
+    .ide-code {
+      flex: 1;
+      padding: 0 20px;
+    }
+    .ide-label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .ide-keyword { color: var(--ide-keyword); }
+    .ide-op { color: var(--ide-op); }
+    .ide-comment {
+      font-size: 14px;
+      color: var(--ide-comment);
+      font-style: italic;
+      margin: 0;
+    }
+    .ide-input {
+      width: 100%;
+      background: var(--ide-input-bg);
+      border: 1px solid var(--ide-border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--ide-input-text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .ide-input::placeholder { color: var(--ide-input-placeholder); }
+    .ide-input:focus {
+      border-color: var(--text-secondary);
+      box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.18);
+    }
+    textarea.ide-input { resize: vertical; }
+  </style>
+</Layout>

@@ -1,0 +1,57 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { Icon } from "astro-icon/components";
+import { posts, categoryColors } from "../../data/blog";
+---
+
+<Layout title="Blog | Cristian Ornelas">
+  <section class="pt-24 md:pt-32 pb-10 md:pb-16 transition-colors duration-300" style="background: var(--bg-primary);">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="reveal">
+        <span class="text-[13px] md:text-[15px] font-semibold tracking-[0.1em] uppercase" style="color: var(--accent);">Blog</span>
+        <h1 class="text-[clamp(1.5rem,5vw,3rem)] font-bold mt-2 mb-2" style="color: var(--text-primary);">Writing & Research</h1>
+        <p class="text-[13px] md:text-[15px] mt-2 max-w-lg" style="color: var(--text-secondary);">Technical deep-dives on AI/ML security, RAG architectures, and local LLM tooling.</p>
+        <div class="w-10 h-0.5 rounded-full mt-4" style="background: var(--accent);"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pb-16 md:pb-28 transition-colors duration-300" style="background: var(--bg-primary);">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-col gap-4 md:gap-5">
+        {posts.map((post, i) => (
+          <a href={`/blog/${post.slug}`} class={`reveal stagger-${i+1} group rounded-2xl border overflow-hidden card-hover`} style="background: var(--card-bg); border-color: var(--border);">
+            <div class="grid md:grid-cols-[260px_1fr]">
+              <div class="h-40 md:h-full overflow-hidden">
+                <img src={post.image} alt={post.title} class="w-full h-full object-cover transition-transform duration-400 group-hover:scale-105" />
+              </div>
+              <div class="p-4 md:p-7 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center gap-1.5 md:gap-2 mb-2 md:mb-3 flex-wrap">
+                    {post.categories.map((cat) => (
+                      <span class="text-[13px] md:text-[15px] font-bold tracking-[0.06em] uppercase px-2 py-0.5 rounded-md" style={`background: ${categoryColors[cat] || '#6366F1'}15; color: ${categoryColors[cat] || 'var(--accent)'};`}>{cat}</span>
+                    ))}
+                    {post.tags.map((tag) => (
+                      <span class="text-[13px] md:text-[15px] font-medium tracking-[0.04em] uppercase px-2 py-0.5 rounded-md" style="background: var(--bg-tertiary); color: var(--text-muted);">{tag}</span>
+                    ))}
+                  </div>
+                  <h2 class="text-base md:text-lg font-bold mb-1.5 md:mb-2 transition-colors duration-200 group-hover:text-[var(--accent)]" style="color: var(--text-primary);">{post.title}</h2>
+                  <p class="text-[13px] md:text-[15px] leading-relaxed" style="color: var(--text-secondary);">{post.description}</p>
+                </div>
+                <div class="flex items-center justify-between mt-3 md:mt-4 pt-3 md:pt-4 border-t" style="border-color: var(--border);">
+                  <span class="text-[13px] md:text-[15px]" style="color: var(--text-muted);">
+                    {new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+                  </span>
+                  <span class="text-[13px] md:text-[15px] flex items-center gap-1 opacity-0 -translate-x-2 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0" style="color: var(--accent);">
+                    Read
+                    <Icon name="lucide:arrow-right" class="w-3.5 h-3.5" />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

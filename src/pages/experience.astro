@@ -1,0 +1,57 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { experience } from "../data/resume";
+---
+
+<Layout title="Experience | Cristian Ornelas">
+  <section class="pt-24 md:pt-32 pb-10 md:pb-16 transition-colors duration-300" style="background: var(--bg-primary);">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="reveal">
+        <span class="text-[13px] md:text-[15px] font-semibold tracking-[0.1em] uppercase" style="color: var(--accent);">Experience</span>
+        <h1 class="text-[clamp(1.5rem,5vw,3rem)] font-bold mt-2 mb-2" style="color: var(--text-primary);">Professional Journey</h1>
+        <div class="w-10 h-0.5 rounded-full mt-4" style="background: var(--accent);"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pb-16 md:pb-28 transition-colors duration-300" style="background: var(--bg-primary);">
+    <div class="max-w-7xl mx-auto px-6">
+      {experience.map((company, ci) => (
+        <div class="mb-8 md:mb-10 last:mb-0">
+          <div class="reveal flex items-center gap-2 md:gap-3 mb-4 md:mb-5 flex-wrap">
+            <div class="w-2 h-2 rounded-full" style="background: var(--accent);"></div>
+            <h2 class="text-base md:text-lg font-bold" style="color: var(--text-primary);">{company.company}</h2>
+            {company.subtitle && <span class="text-[13px] md:text-[15px]" style="color: var(--text-muted);">{company.subtitle}</span>}
+            <span class="text-[13px] md:text-[15px] ml-auto" style="color: var(--text-muted);">{company.location}</span>
+          </div>
+
+          {company.roles.map((role, ri) => (
+            <div class={`reveal stagger-${Math.min(ri+1, 4)} ml-2 md:ml-3 border-l pl-4 md:pl-7 pb-4 md:pb-6 last:pb-0`} style="border-color: var(--border);">
+              <div class="rounded-2xl border p-4 md:p-6 card-hover" style="background: var(--card-bg); border-color: var(--border);">
+                <div class="flex justify-between items-start flex-wrap gap-2 md:gap-3 mb-3 md:mb-4">
+                  <div>
+                    <h3 class="text-[15px] md:text-base font-semibold" style="color: var(--text-primary);">{role.title}</h3>
+                    <span class="text-[13px] md:text-[15px]" style="color: var(--text-muted);">{role.startDate} - {role.endDate}</span>
+                  </div>
+                  {role.current && (
+                    <span class="inline-flex items-center gap-1.5 text-[13px] md:text-[15px] font-semibold tracking-[0.06em] uppercase px-2 md:px-2.5 py-0.5 md:py-1 rounded-md border" style="background: var(--card-bg); color: var(--text-primary); border-color: var(--border); box-shadow: 0 2px 12px var(--accent-soft);">
+                      <span class="w-1.5 h-1.5 rounded-full" style="background: var(--accent); box-shadow: 0 0 6px var(--accent);"></span>
+                      Active
+                    </span>
+                  )}
+                </div>
+                <ul class="flex flex-col gap-1.5 md:gap-2 list-disc pl-5">
+                  {role.bullets.map((b) => (
+                    <li class="text-[13px] md:text-[15px] leading-relaxed" style="color: var(--text-secondary);">
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  </section>
+</Layout>

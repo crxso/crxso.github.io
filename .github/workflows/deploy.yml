@@ -1,0 +1,69 @@
+name: Deploy Astro to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # Twice daily (UTC) to refresh build-time GitHub data (heatmap + languages).
+    # Aligned to 6 AM / 6 PM PST (UTC-8). In PDT (summer) they fire one hour later.
+    - cron: "7 14 * * *"   # 06:07 AM PST / 07:07 AM PDT
+    - cron: "7 2 * * *"    # 06:07 PM PST / 07:07 PM PDT (same-day evening local)
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Verify Web3Forms secret is available (logs length only, not value)
+        run: |
+          if [ -z "$PUBLIC_WEB3FORMS_ACCESS_KEY" ]; then
+            echo "::warning::PUBLIC_WEB3FORMS_ACCESS_KEY is EMPTY — secret not found or not passed through"
+          else
+            echo "PUBLIC_WEB3FORMS_ACCESS_KEY received (length: ${#PUBLIC_WEB3FORMS_ACCESS_KEY} chars)"
+          fi
+        env:
+          PUBLIC_WEB3FORMS_ACCESS_KEY: ${{ secrets.PUBLIC_WEB3FORMS_ACCESS_KEY }}
+
+      - name: Build Astro
+        run: npm run build
+        env:
+          GH_STATS_TOKEN: ${{ secrets.GH_STATS_TOKEN }}
+          GH_EXCLUDE_REPOS: ${{ secrets.GH_EXCLUDE_REPOS }}
+          PUBLIC_WEB3FORMS_ACCESS_KEY: ${{ secrets.PUBLIC_WEB3FORMS_ACCESS_KEY }}
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
