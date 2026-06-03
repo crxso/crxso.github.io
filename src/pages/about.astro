@@ -80,11 +80,13 @@ let longestStreak = { length: 0, start: "", end: "" };
     firstContributionDate = firstDay?.date || "";
 
     // Current streak: walk backward from the latest day.
-    // If the very latest day has no contributions (common mid-day), allow the
-    // streak to end on the most recent day that DOES have contributions.
+    // Grace for ONE trailing zero-day only: if today has no contributions yet
+    // (common mid-day), the streak may still end on yesterday. But if the most
+    // recent contribution is 2+ days old, the streak is broken → length 0.
     let endIdx = allYears.length - 1;
     while (endIdx >= 0 && allYears[endIdx].count === 0) endIdx--;
-    if (endIdx >= 0) {
+    const trailingZeroDays = allYears.length - 1 - endIdx; // 0 = contributed today, 1 = yesterday, 2+ = broken
+    if (endIdx >= 0 && trailingZeroDays <= 1) {
       let len = 1;
       let start = allYears[endIdx].date;
       const end = allYears[endIdx].date;
